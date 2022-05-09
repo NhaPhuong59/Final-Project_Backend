@@ -8,7 +8,7 @@ router.get("/",(req, res, next) => {
 const campsiteRoutes = require("./campsite.api.js");
 router.use("/camps", campsiteRoutes);
 const userRoutes = require("./users.js");
-router.use("/user", userRoutes);
+router.use("/users", userRoutes);
 const imageRoutes = require("./images.js");
 router.use("/image", imageRoutes);
 
