@@ -10,9 +10,9 @@ const campSchema = Schema(
         description: { type: String, required: true},
         images: { type: Array, required: true},
         address: {addressUrl:{type: String, required: true}, addressText:{type: String, required}},
-        rating: {type: Number, default: "0"},
+        rating: {type: Number, default: 0},
         price: {type: Number, required: true},
-        booked: {type: Array, default: []}
+        booked: {type : Array, default: []}
     },
     {
         timestamps: true,
