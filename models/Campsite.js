@@ -12,7 +12,7 @@ const campSchema = Schema(
         address: {addressUrl:{type: String, required: true}, addressText:{type: String, required}},
         rating: {type: Number, default: 0},
         price: {type: Number, required: true},
-        booked: {type : Array, default: []}
+        bookedDates: {type : Array, default: []},
     },
     {
         timestamps: true,
