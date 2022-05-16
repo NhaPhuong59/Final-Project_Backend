@@ -9,6 +9,8 @@ const campsiteRoutes = require("./campsite.api.js");
 router.use("/camps", campsiteRoutes);
 const userRoutes = require("./users.js");
 router.use("/users", userRoutes);
+const bookingRoutes = require("./booking.js");
+router.use("/booking", bookingRoutes);
 const imageRoutes = require("./images.js");
 router.use("/image", imageRoutes);
 
