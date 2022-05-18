@@ -101,7 +101,7 @@ usersController.putForgotPassword = catchAsync(async (req, res, next) => {
     });
 
     let msg = {
-      from: '"Campsite Admin" <campsite2022@gmail.com>',
+      from: '"Nok Nok Campsite Admin" <campsite2022@gmail.com>',
       to: `${email}`,
       subject: "CampSite - Forgot Password / Reset",
       text: `You are receiving this because you (or someone else) have requested the reset of the password for your account. Please click on the following link, or copy and paste it into your browser to complete the process: ${req.headers.origin}/userReset/${token}

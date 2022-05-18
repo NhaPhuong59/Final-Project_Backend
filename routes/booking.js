@@ -1,10 +1,12 @@
 const express = require('express');
-const { createBooking, getBookingByCampId } = require('../controllers/booking.controllers');
+const { createBooking, getBookingSuccess, confirmBooking, getAllBookingByCampId } = require('../controllers/booking.controllers');
 
 const { loginRequired } = require('../middlewares/authentication');
 const router = express.Router();
 
 router.post("/:id", createBooking)
-router.get("/campId/:campId", getBookingByCampId)
+router.get("/bookingSuccess/:campId", getBookingSuccess)
+router.put("/confirm/:token", confirmBooking)
+router.get("/allBooking/:campId", getAllBookingByCampId)
 
 module.exports = router;
