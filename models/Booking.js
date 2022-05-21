@@ -7,6 +7,8 @@ const bookingSchema = Schema(
     {
         campId: { type: Schema.Types.ObjectId, ref: "Camp", required: true },
         guest: { guestName: {type: String, required:true}, email: {type: String, required:true}},
+        guestNumber: {type: Number, required: true},
+        totalPrice: {type: Number, required: true},
         startDate: {type: String, required:true},
         endDate: {type: String, required:true},
         status: {type: String, enum: ["confirmed", "pending"], default: "pending"},
