@@ -9,7 +9,7 @@ const bookingController = {};
 
 bookingController.createBooking = catchAsync(async (req, res, next) => {
     console.log(req.body)
-  let { guest, startDate, endDate, campId} = req.body;
+  let { guest, startDate, endDate, campId, guestNumber, totalPrice} = req.body;
 
   const token = await crypto.randomBytes(20).toString("hex");
 
@@ -23,6 +23,8 @@ bookingController.createBooking = catchAsync(async (req, res, next) => {
   const newBooking = await Booking.create({
       campId,
       guest,
+      guestNumber,
+      totalPrice,
       startDate,
       endDate,
       confirmToken: token
