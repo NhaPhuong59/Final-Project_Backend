@@ -141,6 +141,10 @@ bookingController.getAllBookingByCampId = catchAsync(async(req, res)=>{
   return sendResponse(res, 200, true,bookedDatesList, null, "Get booking list successful")
 })
 
-
+bookingController.getOwnTrip = catchAsync(async(req, res)=>{
+  const {email} = req.body
+  let bookingList = await Booking.find(email ).populate("campId")
+  return sendResponse(res, 200, true, bookingList, null, "Succesful")
+})
 
 module.exports = bookingController;
