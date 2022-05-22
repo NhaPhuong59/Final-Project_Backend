@@ -1,4 +1,4 @@
-const { catchAsync, sendResponse } = require("../helpers/utils");
+const { catchAsync, sendResponse, transporter } = require("../helpers/utils");
 const Users = require("../models/Users");
 const bcrypt = require("bcryptjs");
 const { AppError } = require("../helpers/utils");
@@ -37,7 +37,6 @@ usersController.createUser = catchAsync(async (req, res, next) => {
 usersController.userLogin = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
   const user = await Users.findOne({ email }, "+password");
-  console.log("userLogin", user);
   if (!user) {
     throw new AppError(400, "User not found", "Login Error");
   }
@@ -60,9 +59,7 @@ usersController.userLogin = catchAsync(async (req, res, next) => {
 
 usersController.getCurrentUser = catchAsync(async (req, res, next) => {
   const { currentUserId } = req;
-  console.log(currentUserId);
   const currentUser = await Users.findById(currentUserId);
-  console.log(currentUser);
   if (!currentUser) {
     throw new AppError(404, "User not found", "Get User Error");
   }
@@ -87,19 +84,6 @@ usersController.putForgotPassword = catchAsync(async (req, res, next) => {
   async function main() {
     let testAccount = await nodemailer.createTestAccount();
 
-    let transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      auth: {
-        user: "campsite2022@gmail.com",
-        pass: "campsite123",
-      },
-      tls: {
-        rejectUnauthorized: false,
-      },
-    });
-
     let msg = {
       from: '"Nok Nok Campsite Admin" <campsite2022@gmail.com>',
       to: `${email}`,
@@ -109,10 +93,6 @@ usersController.putForgotPassword = catchAsync(async (req, res, next) => {
     };
 
     let info = await transporter.sendMail(msg);
-
-    console.log("Message sent: %s", info.messageId);
-
-    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
   }
 
   main().catch(console.error);
@@ -150,19 +130,6 @@ usersController.resetPassword = catchAsync(async (req, res, next) => {
   async function main() {
     let testAccount = await nodemailer.createTestAccount();
 
-    let transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      auth: {
-        user: "campsite2022@gmail.com",
-        pass: "campsite123",
-      },
-      tls: {
-        rejectUnauthorized: false,
-      },
-    });
-
     let msg = {
       from: '"Campsite Admin" <campsite2022@gmail.com>',
       to: `${user.email}`,
@@ -171,14 +138,17 @@ usersController.resetPassword = catchAsync(async (req, res, next) => {
     };
 
     let info = await transporter.sendMail(msg);
-
-    console.log("Message sent: %s", info.messageId);
-
-    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
   }
 
   main().catch(console.error);
-  return sendResponse(res, 200, "Password successfully updated!", user, null, "Successful")
+  return sendResponse(
+    res,
+    200,
+    "Password successfully updated!",
+    user,
+    null,
+    "Successful"
+  );
 });
 
 module.exports = usersController;
