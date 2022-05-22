@@ -1,13 +1,16 @@
+const RegexEscape = require("regex-escape");
 const { sendResponse, catchAsync } = require("../helpers/utils");
 const Camp = require("../models/Campsite");
 
 const campController = {};
 campController.getCampList = async (req, res) => {
+  console.log('req.query', req.query);
   let {page, limit,
     startDate: queryStartDate, 
     endDate: queryEndDate,
     minPrice: queryMinPrice,
     maxPrice: queryMaxPrice,
+    camp: queryCamp,
   } = req.query
   console.log("req.query", req.query)
   page = parseInt(page) || 1;
@@ -15,6 +18,12 @@ campController.getCampList = async (req, res) => {
   const offset = limit * (page - 1);
 
   let filter = []
+  if (queryCamp){
+    filter.push({
+      title: {$regex: '.*' + RegexEscape(queryCamp) + '.*', $options: 'i'}
+      // title: queryCamp,
+    });
+  }
   if (queryStartDate || queryEndDate) {
     filter.push({
       bookedDates: {
@@ -46,16 +55,15 @@ campController.getCampList = async (req, res) => {
   console.log("filter", JSON.stringify(filter))
 
   const count = await Camp.countDocuments(filter)
-  console.log('count', count)
+  // console.log('count', count)
   const totalPage = Math.ceil(count/ limit);
   let searchList = await Camp.find(filter).skip(offset).limit(limit)
-  searchList.map((i) => console.log(i.bookedDates));
+  searchList.map((i) => console.log(i));
   return sendResponse(res, 200, true, { searchList, totalPage}, null, "get ListCampsuccessful");
 };
 
-campController.postCamp = catchAsync(async (req, res) => {
+campController.createCamp = catchAsync(async (req, res) => {
   const { currentUserId } = req;
-  console.log(currentUserId);
   let { title, address, description, images, price } = req.body;
     let camp = await Camp.create({
       author: currentUserId,
@@ -76,18 +84,13 @@ campController.getCampById = catchAsync( async (req, res) => {
 
 campController.getCampListByAuthorId = catchAsync(async(req, res)=>{
   const {authorId} = req.params
-  console.log(req.params)
-  console.log("authorId",authorId)
    let campList = await Camp.find({author: authorId})
-  console.log("campList",campList)
    return sendResponse(res, 200, true,  campList , null, "successful");
 })
 
 campController.updateCamp = catchAsync( async(req, res)=>{
   const { title, address, description, images, price } = req.body.dataUpdate;
-  console.log("dataUpdate", title, address,)
   const {id}= req.body
-  console.log("id", id)
   let camp = await Camp.findByIdAndUpdate(id, {
     title: title,
     address:
