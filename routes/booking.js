@@ -5,10 +5,12 @@ const {
   getBookingSuccess,
   confirmBooking,
   getAllBookingByCampId,
+  getOwnTrip,
 } = require("../controllers/booking.controllers");
 
 const { loginRequired } = require("../middlewares/authentication");
 const { validate, checkObjectId } = require("../middlewares/validator");
+const { route } = require("./campsite.api");
 const router = express.Router();
 
 router.post(
@@ -25,5 +27,7 @@ router.put(
 );
 
 router.get("/allBooking/:campId", getAllBookingByCampId);
+
+router.get("/ownTrip", getOwnTrip)
 
 module.exports = router;
