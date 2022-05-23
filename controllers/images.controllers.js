@@ -28,6 +28,7 @@ imagesController.getImage = async (req, res) => {
     res.set({
       "Content-Type": image.mimetype,
       "Content-Length": image.data.size,
+      "Cache-Control": "max-age=" + 30 * 24 * 3600,
     });
     res.send(image.data);
   } catch (error) {
