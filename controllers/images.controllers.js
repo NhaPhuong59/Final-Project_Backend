@@ -18,7 +18,7 @@ imagesController.createImage = async (req, res) => {
       });
       image.save();
     }
-    images.push("http://localhost:5000/api/image/" + hash);
+    images.push("/api/image/" + hash);
   }
   return res.status(200).send({ images, messages: "success" });
 };
