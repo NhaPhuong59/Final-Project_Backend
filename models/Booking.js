@@ -11,6 +11,7 @@ const bookingSchema = Schema(
         startDate: {type: String, required:true},
         endDate: {type: String, required:true},
         status: {type: String, enum: ["confirmed", "pending"], default: "pending"},
+        rating: {type: Number, default: 0},
         confirmToken: {type: String},
         confirmExprires: {type: Date, default: () => new Date(new Date() + 1 * 60 * 1000) }
     },

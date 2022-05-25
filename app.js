@@ -27,7 +27,7 @@ mongoose
   .catch((err) => console.log(err));
 
 app.use('/api', indexRouter);
-app.use('/users', usersRouter);
+// app.use('/users', usersRouter);
 
 app.use((req, res, next) => {
   const err = new Error("Not Found");

@@ -5,6 +5,7 @@ const Booking = require("../models/Booking");
 const Camp = require("../models/Campsite");
 const nodemailer = require("nodemailer");
 const moment = require('moment');
+const Users = require("../models/Users");
 
 const bookingController = {};
 
@@ -142,8 +143,9 @@ bookingController.getAllBookingByCampId = catchAsync(async(req, res)=>{
 })
 
 bookingController.getOwnTrip = catchAsync(async(req, res)=>{
-  const {email} = req.body
-  let bookingList = await Booking.find(email ).populate("campId")
+  const {email} = req.query
+  let bookingList = await Booking.find({"guest.email":`${email}`}).populate("campId").sort({"startDate":-1})
+  
   return sendResponse(res, 200, true, bookingList, null, "Succesful")
 })
 

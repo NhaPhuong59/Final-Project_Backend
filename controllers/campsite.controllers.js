@@ -55,9 +55,8 @@ campController.getCampList = async (req, res) => {
   console.log("filter", JSON.stringify(filter))
 
   const count = await Camp.countDocuments(filter)
-  // console.log('count', count)
   const totalPage = Math.ceil(count/ limit);
-  let searchList = await Camp.find(filter).skip(offset).limit(limit)
+  let searchList = await Camp.find(filter).skip(offset).limit(limit).sort({"createdAt":-1})
   searchList.map((i) => console.log(i));
   return sendResponse(res, 200, true, { searchList, totalPage}, null, "get ListCampsuccessful");
 };

@@ -13,5 +13,7 @@ const bookingRoutes = require("./booking.js");
 router.use("/booking", bookingRoutes);
 const imageRoutes = require("./images.js");
 router.use("/image", imageRoutes);
+const ratingRoutes = require("./rating.js");
+router.use("/rating", ratingRoutes);
 
 module.exports = router;
