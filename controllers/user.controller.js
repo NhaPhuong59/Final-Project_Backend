@@ -1,9 +1,10 @@
-const { catchAsync, sendResponse, transporter } = require("../helpers/utils");
+const { catchAsync, sendResponse} = require("../helpers/utils");
 const Users = require("../models/Users");
 const bcrypt = require("bcryptjs");
 const { AppError } = require("../helpers/utils");
-const nodemailer = require("nodemailer");
 const crypto = require("crypto");
+const sgMail = require('@sendgrid/mail')
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 const usersController = {};
 
@@ -81,8 +82,6 @@ usersController.putForgotPassword = catchAsync(async (req, res, next) => {
   user.resetPasswordExpires = Date.now() + 3600000;
   user = await user.save();
 
-  async function main() {
-    let testAccount = await nodemailer.createTestAccount();
 
     let msg = {
       from: '"Nok Nok Campsite Admin" <campsite2022@gmail.com>',
@@ -92,10 +91,9 @@ usersController.putForgotPassword = catchAsync(async (req, res, next) => {
     If you did not request this, please ignore this email and your password will remain unchanged.`,
     };
 
-    let info = await transporter.sendMail(msg);
-  }
+    sgMail.send(msg).then(respose=> console.log("email sent..."))
+    .catch(error=> console.log(error.message))
 
-  main().catch(console.error);
 
   const success = `An email has been sent to ${email} with further instruction. If you do not see our email, please check the spam!`;
   return sendResponse(res, 200, success, {}, null, "Successful");
@@ -127,8 +125,6 @@ usersController.resetPassword = catchAsync(async (req, res, next) => {
   user.resetPasswordExpires = null;
   user = await user.save();
 
-  async function main() {
-    let testAccount = await nodemailer.createTestAccount();
 
     let msg = {
       from: '"Campsite Admin" <campsite2022@gmail.com>',
@@ -137,10 +133,9 @@ usersController.resetPassword = catchAsync(async (req, res, next) => {
       text: `Hello ${user.userName}!, This email is to confirm that the password for your account has just been changed. If you did not make this change, please hit reply and notify us at once.`,
     };
 
-    let info = await transporter.sendMail(msg);
-  }
+    sgMail.send(msg).then(respose=> console.log("email sent..."))
+    .catch(error=> console.log(error.message))
 
-  main().catch(console.error);
   return sendResponse(
     res,
     200,

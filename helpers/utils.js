@@ -1,4 +1,4 @@
-const nodemailer = require("nodemailer");
+// const nodemailer = require("nodemailer");
 const utilsHelper = {};
 
 utilsHelper.sendResponse = (res, status, success, data, errors, message) => {
@@ -26,17 +26,17 @@ class AppError extends Error {
 
 utilsHelper.AppError = AppError;
 
-utilsHelper.transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.EMAIL_ADDRESS_ADMIN,
-    pass: process.env.PASS_EMAIL_ADMIN
-  },
-  tls: {
-    rejectUnauthorized: false,
-  },
-});
+// utilsHelper.transporter = nodemailer.createTransport({
+//   host: "smtp.gmail.com",
+//   port: 465,
+//   secure: true,
+//   auth: {
+//     user: process.env.EMAIL_ADDRESS_ADMIN,
+//     pass: process.env.PASS_EMAIL_ADMIN
+//   },
+//   tls: {
+//     rejectUnauthorized: false,
+//   },
+// });
 
 module.exports = utilsHelper;

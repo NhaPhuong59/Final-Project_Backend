@@ -1,11 +1,12 @@
-const { catchAsync, sendResponse, transporter } = require("../helpers/utils");
+const { catchAsync, sendResponse} = require("../helpers/utils");
 const { AppError } = require("../helpers/utils");
 const crypto = require("crypto");
 const Booking = require("../models/Booking");
 const Camp = require("../models/Campsite");
-const nodemailer = require("nodemailer");
 const moment = require('moment');
-const Users = require("../models/Users");
+const sgMail = require('@sendgrid/mail')
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+
 
 const bookingController = {};
 
@@ -23,16 +24,16 @@ bookingController.createBooking = catchAsync(async (req, res, next) => {
       endDate,
       confirmToken: token
   })
+  
 
   const camp = await Camp.findById(campId)
-  async function main() {
-    let testAccount = await nodemailer.createTestAccount();
 
     let msg = {
       from: '"Nok Nok Campsite Admin" <campsite2022@gmail.com>',
       to: `${guest.email}`,
       subject: "CampSite - Verify email",
-      text: `
+      text:
+      `
       Hi ${guest.guestName},
 
       Thanks for booking our camp!
@@ -49,11 +50,8 @@ bookingController.createBooking = catchAsync(async (req, res, next) => {
 
       If you did not request this, please ignore this email`,
     };
-
-    let info = await transporter.sendMail(msg);
-  }
-
-  main().catch(console.error);
+    sgMail.send(msg).then(respose=> console.log("email sent..."))
+    .catch(error=> console.log(error.message))
   const success = `An email has been sent to ${guest.email} with further instruction. If you do not see our email, please check the spam!`;
 
   return sendResponse(
@@ -95,8 +93,6 @@ bookingController.confirmBooking = catchAsync(async(req, res)=>{
   camp = await camp.save()
   const {email, guestName} = guest
 
-  async function main() {
-    let testAccount = await nodemailer.createTestAccount();
     
     let msg = {
       from: '"Nok Nok Campsite Admin" <campsite2022@gmail.com>',
@@ -114,11 +110,9 @@ bookingController.confirmBooking = catchAsync(async(req, res)=>{
       This email is to confiem that your booking has just been successfuly. If you did not make this booking, please hit reply and notify us at once`
       ,
     };
-    
-    let info = await transporter.sendMail(msg);
-  }
+    sgMail.send(msg).then(respose=> console.log("email sent..."))
+    .catch(error=> console.log(error.message))
   
-  main().catch(console.error);
   
   bookingConfirmed = bookingConfirmed.save()
   return sendResponse(res, 200, true, {}, null, "Confirm booking successful")
